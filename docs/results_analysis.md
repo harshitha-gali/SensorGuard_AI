@@ -1,25 +1,23 @@
-
 # SensorGuard AI — Results Analysis
 
 ## 1. Experiment Overview
 
-Two Random Forest classifiers were compared using a held-out test set
+Two Random Forest classifiers were evaluated on the same held-out test set
 of 800 synthetic sensor samples.
 
 - **Baseline model:** Trained on clean training data.
-- **Noise-aware model:** Trained on clean training data augmented with
+- **Noise-Aware model:** Trained on clean training data augmented with
   simulated random sensor noise.
-- Both models were evaluated using the same held-out test samples.
-- Evaluation conditions included clean readings, random noise, missing
+- Both models used the same stratified train/test split.
+- Evaluation scenarios included clean readings, random noise, missing
   values, sensor drift, and combined corruption.
 
-All sensor readings are synthetic and do not represent measurements
+All sensor readings are synthetic. They do not represent measurements
 collected from real industrial equipment.
 
-## 2. Results
+## 2. Experimental Results
 
-The following table summarizes the results currently available for
-the four corrupted test conditions.
+The following results were recorded in `results/metrics.csv`.
 
 | Scenario | Model | Accuracy | Macro F1-score | Accuracy drop (percentage points) |
 |---|---|---:|---:|---:|
@@ -34,76 +32,76 @@ the four corrupted test conditions.
 | Combined | Baseline | 53.38% | 51.87% | 45.13 |
 | Combined | Noise-Aware | 61.25% | 59.99% | 37.25 |
 
-Clean-condition metrics will be added after checking the saved evaluation
-results in `results/metrics.csv`.
+Percentages are rounded to two decimal places. Accuracy drop is calculated
+relative to each model's own clean-condition accuracy.
 
 ## 3. Comparison of Model Accuracy
 
-Accuracy differences are calculated as:
+Accuracy difference is calculated as:
 
-**Accuracy difference = Noise-aware accuracy − Baseline accuracy**
+**Accuracy difference = Noise-Aware accuracy − Baseline accuracy**
 
 | Scenario | Accuracy Difference |
 |---|---:|
-| Noise | +1.62 percentage points |
-| Missing Values | -0.12 percentage points |
+| Clean | 0.00 percentage points |
+| Noise | +1.63 percentage points |
+| Missing Values | -0.13 percentage points |
 | Sensor Drift | +11.25 percentage points |
 | Combined | +7.88 percentage points |
 
-Positive values indicate higher accuracy for the noise-aware model.
+Positive values indicate higher accuracy for the Noise-Aware model.
 Negative values indicate lower accuracy.
 
 ## 4. Findings
 
 ### 4.1 Random Noise
 
-The baseline model achieved 94.50% accuracy, while the noise-aware model
-achieved 96.12%.
+The Baseline model achieved 94.50% accuracy, while the Noise-Aware model
+achieved 96.13%.
 
-This represents an improvement of 1.62 percentage points under the
+The improvement was approximately 1.63 percentage points under the
 tested random-noise condition.
 
 ### 4.2 Missing Values
 
-The baseline model achieved 88.00% accuracy, compared with 87.88% for
-the noise-aware model.
+The Baseline model achieved 88.00% accuracy, compared with 87.88% for
+the Noise-Aware model.
 
-The difference is small, and the noise-aware model did not improve
+The difference was small, and noise augmentation did not improve
 accuracy under this condition. Random-noise augmentation alone may not
 provide sufficient robustness to missing sensor readings.
 
 ### 4.3 Sensor Drift
 
-The baseline model achieved 63.75% accuracy, while the noise-aware model
+The Baseline model achieved 63.75% accuracy, while the Noise-Aware model
 achieved 75.00%.
 
-The improvement of 11.25 percentage points is the largest observed
-accuracy gain among the corrupted test conditions.
+The improvement was 11.25 percentage points, the largest observed
+accuracy gain among the tested corrupted scenarios.
 
-This result suggests that training with random-noise augmentation may
-also help under the particular drift simulation used in this experiment.
-Further experiments are needed to determine how consistent this effect is.
+This suggests that random-noise augmentation may also help under the
+particular drift simulation used in this experiment. Additional
+experiments are needed to determine how consistently this effect occurs.
 
 ### 4.4 Combined Corruption
 
-The baseline model achieved 53.37% accuracy, compared with 61.25% for
-the noise-aware model.
+The Baseline model achieved 53.38% accuracy, compared with 61.25% for
+the Noise-Aware model.
 
-The noise-aware model improved accuracy by 7.88 percentage points.
-However, both models performed worse under combined corruption than
-under random noise alone.
+The improvement was approximately 7.88 percentage points. However,
+both models performed worse under combined corruption than under
+random noise alone.
 
-This indicates that simultaneous sensor problems remain challenging
-for both models.
+Simultaneous sensor disturbances remained challenging for both models.
 
 ## 5. Interpretation
 
-The current results suggest that noise-aware training can improve
-classification performance under some simulated corruption conditions.
+The results suggest that noise-aware training can improve classification
+performance under some simulated corruption conditions.
 
 The largest observed improvement occurred under sensor drift, followed
 by combined corruption. Under missing values, performance was nearly
-identical for both models.
+identical, with a slight accuracy disadvantage for the Noise-Aware model.
 
 These findings are specific to the synthetic dataset, selected
 corruption severities, model configuration, and random seed used in
@@ -113,37 +111,22 @@ improve robustness under all conditions.
 ## 6. Limitations
 
 - All sensor readings are synthetic.
-- The simulated operating classes use deliberately designed feature
-  patterns.
+- The simulated fault classes use deliberately designed feature patterns.
 - Only selected corruption types and severity levels were evaluated.
 - The current comparison uses a fixed random seed.
-- The results have not yet been validated using real industrial data.
-- Further experiments are needed to assess repeatability and statistical
-  variation.
+- Results have not been validated on real industrial data.
+- Repeatability and statistical variation across multiple random seeds
+  have not yet been assessed.
 
-Consequently, the findings demonstrate behavior under controlled
-simulations rather than validated industrial reliability.
-
-## 7. Automated Testing
-
-The synthetic sensor data generation module was tested using `pytest`.
-
-**Test results:** 6 passed, 0 failed.
-
-The tests verified:
-- Expected dataset dimensions and column names.
-- Presence of all four fault classes.
-- Balanced class distribution.
-- Reproducibility with a fixed random seed.
-- Correct handling of an invalid sample count.
-
-These tests validate the behavior of the data generation module. They do not establish that the synthetic data accurately represents real industrial sensor behavior.
+The results demonstrate model behaviour under controlled simulation,
+not validated reliability on real industrial equipment.
 
 ## 7. Automated Testing
 
-The project uses pytest to verify the behavior of its main data and machine-learning components.
+The project uses pytest to test its main data and machine-learning
+components.
 
-**Latest test run:** 18 passed, 0 failed, in 10.87 seconds.
+**Latest confirmed test result:** 18 passed, 0 failed.
 
 | Component | Tests | Result |
 |---|---:|---|
@@ -153,18 +136,46 @@ The project uses pytest to verify the behavior of its main data and machine-lear
 | Model evaluation | 3 | Passed |
 | **Total** | **18** | **All passed** |
 
-The tests cover dataset structure, class balance, reproducibility, invalid inputs, corruption behavior, model training, prediction generation, evaluation scenarios, metric ranges, and clean-data accuracy-drop calculations.
+The tests cover dataset structure, class balance, reproducibility,
+invalid inputs, corruption behaviour, model training, prediction
+generation, evaluation scenarios, metric ranges, and accuracy-drop
+calculations.
 
-These tests establish basic software correctness for the tested cases. They do not establish real-world industrial reliability or validate the synthetic data against physical sensor measurements.
+These tests establish software behaviour for the tested cases. They do
+not establish that the synthetic dataset accurately represents real
+industrial sensor behaviour.
 
-## 8. Next Steps
+## 8. Interactive Dashboard
 
-1. Retrieve and include the clean-condition metrics.
-2. Complete the Streamlit dashboard and visualize the results.
-3. Add automated tests for data generation and corruption.
-4. Repeat the experiments with multiple random seeds.
-5. Investigate dedicated augmentation strategies for missing values
+The Streamlit dashboard provides:
+
+- Summary metrics from the predefined experiments.
+- A comparison of Baseline and Noise-Aware model performance.
+- Confusion matrices for combined corruption.
+- Adjustable random-noise, missing-reading, and sensor-drift settings.
+- Interactive evaluation results with accuracy and macro F1-score comparisons.
+
+Interactive evaluations train a fresh pair of models and do not
+overwrite the original saved experiment results.
+
+## 9. Future Work
+
+1. Repeat experiments using multiple random seeds to assess variability.
+2. Investigate dedicated augmentation strategies for missing readings
    and sensor drift.
-6. Document any additional experiments and compare their results with
-   the baseline experiment.
-7. Capture screenshots and complete the project README.
+3. Evaluate additional corruption types and severity levels.
+4. Investigate performance on suitable real-world sensor datasets.
+5. Compare additional model configurations and robustness metrics.
+6. Document further experiments and compare their results with the
+   current baseline.
+
+## 10. Conclusion
+
+In this synthetic-data experiment, noise-aware training improved
+accuracy under random noise, sensor drift, and combined corruption,
+but did not improve accuracy under missing values alone.
+
+These findings provide a starting point for investigating robustness
+in sensor-based fault classification. Real-world validation and
+additional experiments are required before drawing conclusions about
+industrial deployment.
