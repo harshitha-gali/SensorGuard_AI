@@ -104,33 +104,33 @@ Interactive evaluations do not overwrite the original saved experiment results.
 
 ```text
 SensorGuard_AI/
-├── app.py
-├── README.md
-├── requirements.txt
-├── .gitignore
-├── src/
-│   ├── data_generation.py
-│   ├── corruption.py
-│   ├── train.py
-│   └── evaluate.py
-├── experiments/
-│   └── experiment_plan.md
-├── results/
-│   ├── metrics.csv
-│   └── figures/
-├── docs/
-│   ├── problem_statement.md
-│   ├── methodology.md
-│   ├── results_analysis.md
-│   └── screenshots/
-├── tests/
-│   ├── test_data_generation.py
-│   ├── test_corruption.py
-│   ├── test_train.py
-│   └── test_evaluate.py
-└── models/
-    ├── baseline_model.joblib
-    └── noise_aware_model.joblib
+|-- app.py
+|-- README.md
+|-- requirements.txt
+|-- .gitignore
+|-- src/
+|   |-- data_generation.py
+|   |-- corruption.py
+|   |-- train.py
+|   `-- evaluate.py
+|-- experiments/
+|   `-- experiment_plan.md
+|-- results/
+|   |-- metrics.csv
+|   `-- figures/
+|-- docs/
+|   |-- problem_statement.md
+|   |-- methodology.md
+|   |-- results_analysis.md
+|   `-- screenshots/
+|-- tests/
+|   |-- test_data_generation.py
+|   |-- test_corruption.py
+|   |-- test_train.py
+|   `-- test_evaluate.py
+`-- models/
+    |-- baseline_model.joblib
+    `-- noise_aware_model.joblib
 ```
 
 ## 10. Installation and Setup
